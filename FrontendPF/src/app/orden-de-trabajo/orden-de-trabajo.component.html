@@ -1,0 +1,192 @@
+<app-sidenav></app-sidenav>
+<body>
+<div class="container mt-5">
+  <h2 class="card-title text-center mb-4" style="font-family: 'Montserrat', sans-serif; font-weight: bold; color: #343a40;">Crear Orden de Trabajo</h2>
+  <form (ngSubmit)="onSubmit()" class="border p-4 shadow rounded bg-light">
+    <!-- Formulario para crear la orden de trabajo -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="tipoDeOrden" class="form-label">Tipo de Orden</label>
+        <select id="tipoDeOrden" class="form-select" [(ngModel)]="ordenDeTrabajo.tipoDeOrden" name="tipoDeOrden" required>
+          <option *ngFor="let tipo of tiposDeOrden" [value]="tipo">{{ tipo }}</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label for="codigoActivo" class="form-label">Código Activo</label>
+        <input type="text" id="codigoActivo" class="form-control" [(ngModel)]="ordenDeTrabajo.codigoActivo" name="codigoActivo" required>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="tipoActivo" class="form-label">Tipo de Activo</label>
+        <select id="tipoActivo" class="form-select" [(ngModel)]="ordenDeTrabajo.tipoActivo" name="tipoActivo" required>
+          <option *ngFor="let tipo of tiposDeActivos" [value]="tipo">{{ tipo }}</option>
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <label for="edificio" class="form-label">Edificio</label>
+        <div class="dropdown">
+          <select id="edificio" class="form-select" [(ngModel)]="ordenDeTrabajo.edificio" name="edificio" required>
+            <option *ngFor="let edificio of edificios" [value]="edificio">{{ edificio }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="pisoNivel" class="form-label">Piso/Nivel</label>
+        <select id="pisoNivel" class="form-select" [(ngModel)]="ordenDeTrabajo.pisoNivel" name="pisoNivel" required>
+          <option *ngFor="let piso of pisosNiveles" [value]="piso">{{ piso }}</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label for="sector" class="form-label">Sector</label>
+        <select id="sector" class="form-select" [(ngModel)]="ordenDeTrabajo.sector" name="sector" required>
+          <option *ngFor="let sector of sectores" [value]="sector">{{ sector }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="fechaRealizacion" class="form-label">Fecha de Realización</label>
+        <input type="date" id="fechaRealizacion" class="form-control" [(ngModel)]="ordenDeTrabajo.fechaRealizacion" name="fechaRealizacion">
+      </div>
+      <div class="col-md-6">
+        <label for="tiempoTotalUtilizado" class="form-label">Tiempo Total Utilizado</label>
+        <select id="tiempoTotalUtilizado" class="form-select" [(ngModel)]="ordenDeTrabajo.tiempoTotalUtilizado" name="tiempoTotalUtilizado" required>
+          <option *ngFor="let tiempo of tiempos" [value]="tiempo">{{ tiempo }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="instruccionesDeTarea" class="form-label">Instrucciones de la Tarea</label>
+      <textarea id="instruccionesDeTarea" class="form-control" rows="3" [(ngModel)]="ordenDeTrabajo.instruccionesDeTarea" name="instruccionesDeTarea"></textarea>
+    </div>
+
+    <div class="mb-3">
+      <label for="observaciones" class="form-label">Observaciones</label>
+      <textarea id="observaciones" class="form-control" rows="3" [(ngModel)]="ordenDeTrabajo.observaciones" name="observaciones"></textarea>
+    </div>
+
+    <div *ngFor="let tarea of ordenDeTrabajo.tareas; let i = index" class="mb-3">
+      <label>Tarea {{ i + 1 }}</label>
+      <input type="text" class="form-control mb-2" [(ngModel)]="tarea.descripcion" [name]="'tarea' + i" placeholder="Descripción de la tarea">
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="username" class="form-label">Realizado por</label>
+        <input type="text" id="username" class="form-control" [(ngModel)]="ordenDeTrabajo.username" name="username" required>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Crear Orden</button>
+  </form>
+
+  <hr class="my-5">
+
+  <h2 class="text-center mb-4">Buscar Orden de Trabajo</h2>
+  <div class="border p-4 shadow rounded bg-light">
+    <div class="form-group mb-3">
+      <input type="number" class="form-control" [(ngModel)]="ordenId" placeholder="Ingrese el ID de la orden">
+    </div>
+    <button class="btn btn-secondary w-100" (click)="mostrarOrden()">Mostrar Orden</button>
+  </div>
+
+  <!-- Modal para mostrar la orden -->
+  <ng-template #ordenModal>
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content border-0 rounded shadow-lg">
+        <div class="modal-header">
+          <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="container">
+            <div class="row text-center mb-4">
+              <div class="col-md-12">
+                <img src="assets/UTNfavicon.png" alt="Logo UTN" class="img-fluid mb-2" style="max-width: 100px;">
+                <h5 class="fw-bold text-uppercase">{{ordenMostrada?.tipoDeOrden}}</h5>
+                <p>OT N° {{ ordenMostrada?.id }}</p>
+              </div>
+            </div>
+  
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Código Único de Identificación de Activo:</strong> {{ ordenMostrada?.codigoActivo }}</p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>Tipo de Activo:</strong> {{ ordenMostrada?.tipoActivo }}</p>
+              </div>
+            </div>
+  
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Edificio:</strong> {{ ordenMostrada?.edificio }}</p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>Piso/Nivel:</strong> {{ ordenMostrada?.pisoNivel }}</p>
+              </div>
+            </div>
+  
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Sector:</strong> {{ ordenMostrada?.sector }}</p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>Fecha de Realización:</strong> {{ ordenMostrada?.fechaRealizacion | date }}</p>
+              </div>
+            </div>
+  
+            <div class="row">
+              <div class="col-md-12">
+                <table class="table table-bordered">
+                  <thead class="table-light">
+                    <tr>
+                      <th>#</th>
+                      <th>Instrucciones de la Tarea</th>
+                    </tr>
+                    <p>{{ ordenMostrada?.instruccionesDeTarea }}</p>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let tarea of ordenMostrada?.tareas; let i = index">
+                      <td>{{ i + 1 }}</td>
+                      <td>{{ tarea.descripcion }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+  
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Tiempo Total Utilizado:</strong> {{ ordenMostrada?.tiempoTotalUtilizado }}</p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>Realizado por:</strong> {{ ordenMostrada?.username }}</p>
+              </div>
+            </div>
+  
+            <div class="row">
+              <div class="col-md-12">
+                <p><strong>Observaciones:</strong> {{ ordenMostrada?.observaciones }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </ng-template>  
+</div>
+</body>
+
+
+
+  

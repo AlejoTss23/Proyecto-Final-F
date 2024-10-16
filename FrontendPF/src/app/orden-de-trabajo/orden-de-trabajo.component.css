@@ -1,0 +1,33 @@
+
+select {
+    max-height: 300px;
+  }
+  .modal-content {
+    border: 2px solid #000;
+    padding: 20px;
+  }
+  
+  .modal-body p {
+    font-size: 14px;
+  }
+  
+  .table {
+    margin-top: 20px;
+    font-size: 14px;
+  }
+  
+  .modal-header h5 {
+    font-weight: bold;
+  }
+  
+  .modal-footer {
+    justify-content: center;
+  }
+  
+  img.img-fluid {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  

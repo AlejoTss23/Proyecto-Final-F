@@ -1,0 +1,74 @@
+<app-sidenav></app-sidenav>
+<!-- admin-usuarios.component.html -->
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Administración de Usuarios</h2>
+
+    <!-- Formulario para crear/editar un usuario -->
+    <div class="card shadow-sm mb-5">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">{{ editando ? 'Editar Usuario' : 'Crear Nuevo Usuario' }}</h5>
+        </div>
+        <div class="card-body">
+            <form (ngSubmit)="onSubmit()">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="username" class="form-label">Nombre</label>
+                        <input type="text" id="username" class="form-control" [(ngModel)]="usuario.username" name="username" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="password" class="form-label">Contraseña</label>
+                        <input type="password" id="password" class="form-control" [(ngModel)]="usuario.password" name="password" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="role" class="form-label">Rol</label>
+                        <select id="role" class="form-select" [(ngModel)]="usuario.role" name="role" required>
+                            <option value="ROLE_ADMIN">Administrador</option>
+                            <option value="ROLE_WORKER">Trabajador</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary w-50">
+                         {{ editando ? 'Actualizar' : 'Crear' }} Usuario
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tabla para mostrar los usuarios -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">Lista de Usuarios</h5>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Usuario</th>
+                        <th>Rol</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let user of usuarios">
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.role }}</td>
+                        <td class="text-center">
+                            <button (click)="editarUsuario(user)" class="btn btn-sm btn-warning me-2">
+                                <i class="bi bi-pencil-square"></i> Editar
+                            </button>
+                            <button (click)="eliminarUsuario(user.id)" class="btn btn-sm btn-danger">
+                                <i class="bi bi-trash-fill"></i> Eliminar
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+  
